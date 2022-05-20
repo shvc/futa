@@ -113,10 +113,9 @@ class _LoginPageState extends State<LoginPage> {
         return;
       }
       savePrefs();
-      var objs = minio.listObjects(bucketNameControler.text);
 
       Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) {
-        return DashboardPage(bucketNameControler.text, objs);
+        return DashboardPage(bucketNameControler.text, minio);
       }));
     } catch (err, stackTrace) {
       debugPrint('bucket:${bucketNameControler.text}, err:${err.toString()}');
@@ -165,12 +164,12 @@ class _LoginPageState extends State<LoginPage> {
         keyboardType: TextInputType.url,
         controller: endpointControler,
         decoration: InputDecoration(
-            labelText: "Endpoint",
-            hintText: 'http://address:port',
-            contentPadding:
-                const EdgeInsets.symmetric(horizontal: 25, vertical: 20),
-            border:
-                OutlineInputBorder(borderRadius: BorderRadius.circular(50.0))),
+          labelText: "Endpoint",
+          hintText: 'http://address:port',
+          contentPadding:
+              const EdgeInsets.symmetric(horizontal: 25, vertical: 20),
+          border: OutlineInputBorder(borderRadius: BorderRadius.circular(50.0)),
+        ),
       ),
     );
 
