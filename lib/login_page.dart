@@ -7,7 +7,7 @@ class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
 
   @override
-  _LoginPageState createState() => _LoginPageState();
+  State createState() => _LoginPageState();
 }
 
 class _LoginPageState extends State<LoginPage> {
@@ -77,8 +77,8 @@ class _LoginPageState extends State<LoginPage> {
       }
       debugPrint('endpoint: ${endpointControler.text}');
       debugPrint('host: ${endpoint.host} port: $port ssl: $useSSL');
-      debugPrint('ak: ' + accessKeyControler.text);
-      debugPrint('sk: ' + secretKeyControler.text);
+      debugPrint('ak: ${accessKeyControler.text}');
+      debugPrint('sk: ${secretKeyControler.text}');
 
       final minio = Minio(
         endPoint: endpoint.host,
@@ -92,13 +92,13 @@ class _LoginPageState extends State<LoginPage> {
 
       var exists = await minio.bucketExists(bucketNameControler.text);
       if (!exists) {
-        debugPrint('bucket not exists: ' + bucketNameControler.text);
+        debugPrint('bucket ${bucketNameControler.text} not exists');
         showDialog(
           context: context,
           builder: (BuildContext context) {
             return AlertDialog(
               title: const Text("alter"),
-              content: Text("bucket not exists: " + bucketNameControler.text),
+              content: Text('bucket ${bucketNameControler.text} not exists'),
               actions: <Widget>[
                 TextButton(
                   child: const Text("OK"),
@@ -240,9 +240,9 @@ class _LoginPageState extends State<LoginPage> {
       child: ButtonTheme(
         height: 56,
         child: ElevatedButton(
+          onPressed: _isLoginButtonPressed ? null : login,
           child: const Text('Login',
               style: TextStyle(color: Colors.white, fontSize: 20)),
-          onPressed: _isLoginButtonPressed ? null : login,
         ),
       ),
     );

@@ -35,6 +35,7 @@ class _DashboardState extends State<DashboardPage> {
       _isUploadButtonPressed = true;
     });
     try {
+      final sms = ScaffoldMessenger.of(context);
       FilePickerResult? pickResult =
           await FilePicker.platform.pickFiles(type: FileType.any);
       if (pickResult == null) {
@@ -44,7 +45,7 @@ class _DashboardState extends State<DashboardPage> {
       File local = File(pickResult.files.single.path!);
       debugPrint("upload file: ${local.path}");
 
-      ScaffoldMessenger.of(context).showSnackBar(
+      sms.showSnackBar(
         SnackBar(
           content: Text('upload ${local.path}'),
           action: SnackBarAction(label: "OK", onPressed: () => {}),
@@ -107,8 +108,8 @@ class _DashboardState extends State<DashboardPage> {
         ),
         floatingActionButton: FloatingActionButton(
           tooltip: "upload file",
-          child: const Icon(Icons.add),
           onPressed: _isUploadButtonPressed ? null : upload,
+          child: const Icon(Icons.add),
         ),
         body: Center(
           child: StreamBuilder(
