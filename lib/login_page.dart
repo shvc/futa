@@ -241,7 +241,7 @@ class _LoginPageState extends State<LoginPage> {
         height: 56,
         child: ElevatedButton(
           onPressed: _isLoginButtonPressed ? null : login,
-          child: const Text('Login',
+          child: const Text('Enter',
               style: TextStyle(color: Colors.white, fontSize: 20)),
         ),
       ),
