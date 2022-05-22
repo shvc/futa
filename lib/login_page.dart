@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:minio/minio.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -124,7 +126,7 @@ class _LoginPageState extends State<LoginPage> {
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
-            title: const Text("alter"),
+            title: const Text("error"),
             content: Text(err.toString()),
             actions: <Widget>[
               TextButton(
@@ -248,6 +250,10 @@ class _LoginPageState extends State<LoginPage> {
 
     return SafeArea(
       child: Scaffold(
+        persistentFooterButtons: [
+          Text(Platform.operatingSystem),
+          Text(Platform.operatingSystemVersion)
+        ],
         body: Center(
           child: ListView(
             shrinkWrap: true,

@@ -1,6 +1,5 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
+import 'package:futa/detail_page.dart';
 
 import 'login_page.dart';
 
@@ -19,14 +18,13 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'app title',
-      home: Scaffold(
-        persistentFooterButtons: [
-          Text(Platform.operatingSystem),
-          Text(Platform.operatingSystemVersion)
-        ],
-        body: const LoginPage(),
-      ),
+      title: 'futa',
+      initialRoute: "/",
+      routes: {
+        "/": (BuildContext context) => const LoginPage(),
+        //"/dashboard": (BuildContext context) =>  DashboardPage(""),
+        "/dashboard/detail": (BuildContext context) => const DetailPage(),
+      },
     );
   }
 }

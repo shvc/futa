@@ -6,7 +6,6 @@ import 'package:minio/models.dart' as mmodel;
 import 'package:file_picker/file_picker.dart';
 import 'package:minio/minio.dart';
 
-import 'detail_page.dart';
 import 'login_page.dart';
 
 class DashboardPage extends StatefulWidget {
@@ -68,9 +67,26 @@ class _DashboardState extends State<DashboardPage> {
           action: SnackBarAction(label: "OK", onPressed: () => {}),
         ),
       );
-    } catch (err, stackTrace) {
+    } catch (err) {
       debugPrint(err.toString());
-      debugPrint(stackTrace.toString());
+      //debugPrint(stackTrace.toString());
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: const Text("error"),
+            content: Text(err.toString()),
+            actions: <Widget>[
+              TextButton(
+                child: const Text("OK"),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
+          );
+        },
+      );
     } finally {
       setState(() {
         _isUploadButtonPressed = false;
@@ -80,28 +96,39 @@ class _DashboardState extends State<DashboardPage> {
 
   @override
   Widget build(BuildContext context) {
+    final ThemeData theme = Theme.of(context);
+    final TextStyle textStyle = theme.textTheme.bodyText2!;
+    final List<Widget> aboutBoxChildren = <Widget>[
+      const SizedBox(height: 24),
+      RichText(
+        text: TextSpan(
+          children: <TextSpan>[
+            TextSpan(
+                style: textStyle.copyWith(color: theme.colorScheme.primary),
+                text: 'https://github.com/shvc/futa'),
+            TextSpan(style: textStyle, text: '.'),
+          ],
+        ),
+      ),
+    ];
+
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
           title: Text(widget.bucketName),
         ),
         drawer: Drawer(
-          child: ListView(
-            //padding: EdgeInsets.zero,
-            children: <Widget>[
-              ListTile(
-                title: const Text('preference'),
-                onTap: () {
-                  Navigator.pop(context);
-                },
+          child: SingleChildScrollView(
+            child: SafeArea(
+              child: AboutListTile(
+                icon: const Icon(Icons.info),
+                applicationIcon: const FlutterLogo(),
+                applicationName: 'About',
+                applicationVersion: 'August 2022',
+                applicationLegalese: '\u{a9} 2022 The Authors',
+                aboutBoxChildren: aboutBoxChildren,
               ),
-              ListTile(
-                title: const Text('exit'),
-                onTap: () {
-                  logout();
-                },
-              ),
-            ],
+            ),
           ),
         ),
         endDrawer: Drawer(
@@ -143,17 +170,8 @@ class _DashboardState extends State<DashboardPage> {
                       return ListTile(
                         title: Text(objects[index].key!),
                         onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => const DetailPage(),
-                              // Pass the arguments as part of the RouteSettings. The
-                              // DetailScreen reads the arguments from these settings.
-                              settings: RouteSettings(
-                                arguments: objects[index],
-                              ),
-                            ),
-                          );
+                          Navigator.pushNamed(context, "/dashboard/detail",
+                              arguments: objects[index]);
                         },
                       );
                     });
