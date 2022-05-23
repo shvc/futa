@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'dart:typed_data';
 
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:minio/models.dart' as mmodel;
 import 'package:file_picker/file_picker.dart';
@@ -96,22 +97,6 @@ class _DashboardState extends State<DashboardPage> {
 
   @override
   Widget build(BuildContext context) {
-    final ThemeData theme = Theme.of(context);
-    final TextStyle textStyle = theme.textTheme.bodyText2!;
-    final List<Widget> aboutBoxChildren = <Widget>[
-      const SizedBox(height: 24),
-      RichText(
-        text: TextSpan(
-          children: <TextSpan>[
-            TextSpan(
-                style: textStyle.copyWith(color: theme.colorScheme.primary),
-                text: 'https://github.com/shvc/futa'),
-            TextSpan(style: textStyle, text: '.'),
-          ],
-        ),
-      ),
-    ];
-
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
@@ -123,10 +108,24 @@ class _DashboardState extends State<DashboardPage> {
               child: AboutListTile(
                 icon: const Icon(Icons.info),
                 applicationIcon: const FlutterLogo(),
-                applicationName: 'About',
-                applicationVersion: 'August 2022',
+                applicationVersion: '1.0.0 @2022-05',
                 applicationLegalese: '\u{a9} 2022 The Authors',
-                aboutBoxChildren: aboutBoxChildren,
+                aboutBoxChildren: <Widget>[
+                  const SizedBox(height: 24),
+                  Text.rich(
+                    TextSpan(
+                      children: <TextSpan>[
+                        const TextSpan(text: "Home: "),
+                        TextSpan(
+                          style: const TextStyle(color: Colors.blue),
+                          text: 'https://github.com/shvc/futa',
+                          recognizer: TapGestureRecognizer(),
+                        ),
+                        //TextSpan(style: textStyle, text: '.'),
+                      ],
+                    ),
+                  ),
+                ],
               ),
             ),
           ),

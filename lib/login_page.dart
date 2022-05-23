@@ -68,6 +68,7 @@ class _LoginPageState extends State<LoginPage> {
       _isLoginButtonPressed = true;
     });
     try {
+      var nav = Navigator.of(context);
       int? port;
       bool useSSL = false;
       var endpoint = Uri.parse(endpointControler.text);
@@ -116,7 +117,7 @@ class _LoginPageState extends State<LoginPage> {
       }
       savePrefs();
 
-      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) {
+      nav.pushReplacement(MaterialPageRoute(builder: (context) {
         return DashboardPage(bucketNameControler.text, minio);
       }));
     } catch (err, stackTrace) {
@@ -242,8 +243,11 @@ class _LoginPageState extends State<LoginPage> {
         height: 56,
         child: ElevatedButton(
           onPressed: _isLoginButtonPressed ? null : login,
-          child: const Text('Enter',
-              style: TextStyle(color: Colors.white, fontSize: 20)),
+          focusNode: FocusNode(),
+          child: const Text(
+            'Enter',
+            style: TextStyle(color: Colors.white, fontSize: 20),
+          ),
         ),
       ),
     );
