@@ -147,10 +147,12 @@ class _LoginPageState extends State<LoginPage> {
     }
   }
 
+  final GlobalKey _formKey = GlobalKey<FormState>();
+
   @override
   Widget build(BuildContext context) {
-    final logo = Padding(
-      padding: const EdgeInsets.all(20),
+    final hero = Padding(
+      padding: const EdgeInsets.only(top: 25, bottom: 15),
       child: Hero(
         tag: 'hero',
         child: CircleAvatar(
@@ -161,95 +163,133 @@ class _LoginPageState extends State<LoginPage> {
       ),
     );
 
-    final inputEndpoint = Padding(
-      padding: const EdgeInsets.only(bottom: 10),
-      child: TextField(
-        keyboardType: TextInputType.url,
+    final endpointField = Padding(
+      padding: const EdgeInsets.only(bottom: 20),
+      child: TextFormField(
+        autofocus: true,
         controller: endpointControler,
         decoration: InputDecoration(
           labelText: "Endpoint",
           hintText: 'http://address:port',
-          contentPadding:
-              const EdgeInsets.symmetric(horizontal: 25, vertical: 20),
-          border: OutlineInputBorder(borderRadius: BorderRadius.circular(50.0)),
+          contentPadding: const EdgeInsets.symmetric(
+            horizontal: 25,
+            vertical: 1,
+          ),
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(15.0),
+          ),
         ),
+        validator: (v) {
+          return v!.trim().isNotEmpty ? null : "Endpoint URL can not be empty";
+        },
       ),
     );
 
-    final inputRegion = Padding(
-      padding: const EdgeInsets.only(bottom: 10),
-      child: TextField(
-        keyboardType: TextInputType.text,
+    final regionField = Padding(
+      padding: const EdgeInsets.only(bottom: 20),
+      child: TextFormField(
+        autofocus: true,
         controller: regionControler,
         decoration: InputDecoration(
-            labelText: "Region",
-            hintText: 'cn-north-1',
-            contentPadding:
-                const EdgeInsets.symmetric(horizontal: 25, vertical: 20),
-            border:
-                OutlineInputBorder(borderRadius: BorderRadius.circular(50.0))),
+          labelText: "Region",
+          hintText: 'cn-north-1',
+          contentPadding: const EdgeInsets.symmetric(
+            horizontal: 25,
+            vertical: 10,
+          ),
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(15.0),
+          ),
+        ),
+        validator: (v) {
+          return null;
+        },
       ),
     );
 
-    final inputAccessKey = Padding(
-      padding: const EdgeInsets.only(bottom: 10),
-      child: TextField(
-        keyboardType: TextInputType.text,
+    final accessKeyField = Padding(
+      padding: const EdgeInsets.only(bottom: 20),
+      child: TextFormField(
+        autofocus: true,
         controller: accessKeyControler,
         decoration: InputDecoration(
-            labelText: "Access Key",
-            //hintText: 'Access Key',
-            contentPadding:
-                const EdgeInsets.symmetric(horizontal: 25, vertical: 20),
-            border:
-                OutlineInputBorder(borderRadius: BorderRadius.circular(50.0))),
+          labelText: "Access Key",
+          contentPadding: const EdgeInsets.symmetric(
+            horizontal: 25,
+            vertical: 10,
+          ),
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(15.0),
+          ),
+        ),
+        validator: (v) {
+          return v!.trim().length > 1 ? null : "Access Key is too short";
+        },
       ),
     );
 
-    final inputSecretKey = Padding(
+    final secretKeyField = Padding(
       padding: const EdgeInsets.only(bottom: 20),
-      child: TextField(
-        keyboardType: TextInputType.emailAddress,
-        obscureText: true,
+      child: TextFormField(
         controller: secretKeyControler,
         decoration: InputDecoration(
           labelText: "Secret Key",
-          //hintText: 'Secret Key',
-          contentPadding:
-              const EdgeInsets.symmetric(horizontal: 25, vertical: 20),
-          border: OutlineInputBorder(borderRadius: BorderRadius.circular(50.0)),
+          contentPadding: const EdgeInsets.symmetric(
+            horizontal: 25,
+            vertical: 10,
+          ),
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(15.0),
+          ),
         ),
+        obscureText: true,
+        validator: (v) {
+          return v!.trim().length > 1 ? null : "Secret Key is too short";
+        },
       ),
     );
 
-    final inputBucketName = Padding(
+    final bucketNameField = Padding(
       padding: const EdgeInsets.only(bottom: 20),
-      child: TextField(
-        keyboardType: TextInputType.text,
+      child: TextFormField(
         controller: bucketNameControler,
         decoration: InputDecoration(
           labelText: "Bucket Name",
-          //hintText: 'Bucket Name',
-          contentPadding:
-              const EdgeInsets.symmetric(horizontal: 25, vertical: 20),
-          border: OutlineInputBorder(borderRadius: BorderRadius.circular(50.0)),
+          contentPadding: const EdgeInsets.symmetric(
+            horizontal: 25,
+            vertical: 10,
+          ),
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(15.0),
+          ),
         ),
+        validator: (v) {
+          return v!.trim().length > 2 ? null : "Bucket Name is too short";
+        },
       ),
     );
 
-    final buttonLogin = Padding(
-      padding: const EdgeInsets.only(bottom: 5),
-      child: ButtonTheme(
-        height: 56,
-        child: ElevatedButton(
-          onPressed: _isLoginButtonPressed ? null : login,
-          focusNode: FocusNode(),
-          child: const Text(
-            'Enter',
-            style: TextStyle(color: Colors.white, fontSize: 20),
+    final enterField = Padding(
+      padding: const EdgeInsets.only(top: 10.0),
+      child: Row(children: <Widget>[
+        Expanded(
+          child: ElevatedButton(
+            onPressed: _isLoginButtonPressed
+                ? null
+                : () {
+                    if (!(_formKey.currentState as FormState).validate()) {
+                      return;
+                    }
+                    login();
+                  },
+            focusNode: FocusNode(),
+            child: const Padding(
+              padding: EdgeInsets.all(15.0),
+              child: Text("Enter"),
+            ),
           ),
         ),
-      ),
+      ]),
     );
 
     return SafeArea(
@@ -258,18 +298,24 @@ class _LoginPageState extends State<LoginPage> {
           Text(Platform.operatingSystem),
           Text(Platform.operatingSystemVersion)
         ],
-        body: Center(
-          child: ListView(
-            shrinkWrap: true,
-            padding: const EdgeInsets.symmetric(horizontal: 20),
-            children: <Widget>[
-              logo,
-              inputEndpoint,
-              inputRegion,
-              inputAccessKey,
-              inputSecretKey,
-              inputBucketName,
-              buttonLogin,
+        body: SingleChildScrollView(
+          child: Column(
+            children: [
+              hero,
+              Form(
+                key: _formKey,
+                autovalidateMode: AutovalidateMode.onUserInteraction,
+                child: Column(
+                  children: <Widget>[
+                    endpointField,
+                    regionField,
+                    accessKeyField,
+                    secretKeyField,
+                    bucketNameField,
+                    enterField,
+                  ],
+                ),
+              ),
             ],
           ),
         ),
