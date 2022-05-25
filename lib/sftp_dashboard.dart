@@ -9,7 +9,7 @@ import 'main.dart';
 
 class SftpDashboard extends StatefulWidget {
   final String bucketName;
-  SftpClient client;
+  final SftpClient client;
   late final Stream<List<SftpName>> dataStream;
 
   SftpDashboard(this.bucketName, this.client, {Key? key}) : super(key: key) {
@@ -165,10 +165,13 @@ class _SftpDashboardState extends State<SftpDashboard> {
                     itemCount: objects.length,
                     itemBuilder: (context, index) {
                       return ListTile(
-                        title: Text(objects[index].longname),
+                        title: Text(objects[index].filename),
                         onTap: () {
-                          Navigator.pushNamed(context, "/dashboard/sftp_detail",
-                              arguments: objects[index]);
+                          Navigator.pushNamed(
+                            context,
+                            "/dashboard/sftp_detail",
+                            arguments: objects[index],
+                          );
                         },
                       );
                     });

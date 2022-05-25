@@ -9,12 +9,12 @@ import 'package:minio/minio.dart';
 
 import 'main.dart';
 
-class DashboardPage extends StatefulWidget {
+class S3Dashboard extends StatefulWidget {
   final String bucketName;
-  Minio client;
+  final Minio client;
   late final Stream<mmodel.ListObjectsResult> dataStream;
 
-  DashboardPage(this.bucketName, this.client, {Key? key}) : super(key: key) {
+  S3Dashboard(this.bucketName, this.client, {Key? key}) : super(key: key) {
     dataStream = client.listObjects(bucketName);
   }
 
@@ -22,7 +22,7 @@ class DashboardPage extends StatefulWidget {
   State createState() => _DashboardState();
 }
 
-class _DashboardState extends State<DashboardPage> {
+class _DashboardState extends State<S3Dashboard> {
   bool _isUploadButtonPressed = false;
   @override
   void dispose() {
@@ -169,8 +169,11 @@ class _DashboardState extends State<DashboardPage> {
                       return ListTile(
                         title: Text(objects[index].key!),
                         onTap: () {
-                          Navigator.pushNamed(context, "/dashboard/detail",
-                              arguments: objects[index]);
+                          Navigator.pushNamed(
+                            context,
+                            "/dashboard/s3_detail",
+                            arguments: objects[index],
+                          );
                         },
                       );
                     });

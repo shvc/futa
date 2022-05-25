@@ -1,9 +1,9 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:futa/s3_dashboard.dart';
 import 'package:minio/minio.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'dashboard.dart';
 
 class S3LoginPage extends StatefulWidget {
   const S3LoginPage({Key? key}) : super(key: key);
@@ -118,7 +118,7 @@ class _S3LoginPageState extends State<S3LoginPage> {
       savePrefs();
 
       nav.pushReplacement(MaterialPageRoute(builder: (context) {
-        return DashboardPage(bucketNameControler.text, minio);
+        return S3Dashboard(bucketNameControler.text, minio);
       }));
     } catch (err, stackTrace) {
       debugPrint('bucket:${bucketNameControler.text}, err:${err.toString()}');

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:minio/models.dart' as mmodel;
 
-class DetailPage extends StatelessWidget {
-  const DetailPage({Key? key}) : super(key: key);
+class S3Detail extends StatelessWidget {
+  const S3Detail({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
