@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'detail_page.dart';
 import 's3_login.dart';
+import 'sftp_detail.dart';
 import 'sftp_login.dart';
 
 void main() {
@@ -19,7 +20,8 @@ class MyApp extends StatelessWidget {
       routes: {
         //"/": (BuildContext context) => LoginPage(),
         //"/dashboard": (BuildContext context) =>  DashboardPage(""),
-        "/dashboard/detail": (BuildContext context) => const DetailPage(),
+        "/dashboard/s3_detail": (BuildContext context) => const DetailPage(),
+        "/dashboard/sftp_detail": (BuildContext context) => const SftpDetail(),
       },
       home: DefaultTabController(
         length: 2,

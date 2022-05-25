@@ -1,28 +1,27 @@
 import 'dart:io';
 import 'dart:typed_data';
 
+import 'package:dartssh2/dartssh2.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:minio/models.dart' as mmodel;
 import 'package:file_picker/file_picker.dart';
-import 'package:minio/minio.dart';
 
 import 'main.dart';
 
-class DashboardPage extends StatefulWidget {
+class SftpDashboard extends StatefulWidget {
   final String bucketName;
-  Minio client;
-  late final Stream<mmodel.ListObjectsResult> dataStream;
+  SftpClient client;
+  late final Stream<List<SftpName>> dataStream;
 
-  DashboardPage(this.bucketName, this.client, {Key? key}) : super(key: key) {
-    dataStream = client.listObjects(bucketName);
+  SftpDashboard(this.bucketName, this.client, {Key? key}) : super(key: key) {
+    dataStream = client.listdir(bucketName).asStream();
   }
 
   @override
-  State createState() => _DashboardState();
+  State createState() => _SftpDashboardState();
 }
 
-class _DashboardState extends State<DashboardPage> {
+class _SftpDashboardState extends State<SftpDashboard> {
   bool _isUploadButtonPressed = false;
   @override
   void dispose() {
@@ -54,13 +53,13 @@ class _DashboardState extends State<DashboardPage> {
       }
 
       File local = File(filename);
-      final stat = await local.stat();
+      //final stat = await local.stat();
 
-      final putResult = await widget.client.putObject(widget.bucketName,
-          local.path.split('/').last, local.openRead().cast<Uint8List>(),
-          size: stat.size);
-      debugPrint(
-          "upload file:${local.path} key:${local.path.split('/').last} result:$putResult");
+      final file = await widget.client.open(local.path.split('/').last,
+          mode: SftpFileOpenMode.create | SftpFileOpenMode.write);
+      await file.write(local.openRead().cast());
+
+      debugPrint("upload file:${local.path} key:${local.path.split('/').last}");
 
       sms.showSnackBar(
         SnackBar(
@@ -157,19 +156,19 @@ class _DashboardState extends State<DashboardPage> {
         body: Center(
           child: StreamBuilder(
             stream: widget.dataStream,
-            builder: (BuildContext context,
-                AsyncSnapshot<mmodel.ListObjectsResult> snapshot) {
+            builder:
+                (BuildContext context, AsyncSnapshot<List<SftpName>> snapshot) {
               if (snapshot.hasData) {
-                final List<mmodel.Object> objects = snapshot.data!.objects;
+                final List<SftpName> objects = snapshot.data!;
                 return ListView.builder(
                     //shrinkWrap: true,
                     //physics: const NeverScrollableScrollPhysics(),
                     itemCount: objects.length,
                     itemBuilder: (context, index) {
                       return ListTile(
-                        title: Text(objects[index].key!),
+                        title: Text(objects[index].longname),
                         onTap: () {
-                          Navigator.pushNamed(context, "/dashboard/detail",
+                          Navigator.pushNamed(context, "/dashboard/sftp_detail",
                               arguments: objects[index]);
                         },
                       );

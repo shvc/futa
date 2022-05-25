@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:dartssh2/dartssh2.dart';
+import 'package:futa/sftp_dashboard.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dashboard.dart';
 
@@ -73,37 +74,14 @@ class _SftpLoginPageState extends State<SftpLoginPage> {
         username: sftpUserNameControler.text,
         onPasswordRequest: () => sftpUserPasswdControler.text,
       );
-      String filenames = '';
       final sftp = await client.sftp();
-      final items = await sftp.listdir(sftpRemoteDirControler.text);
-      for (final item in items) {
-        filenames += '${item.filename}  ';
-      }
       savePrefs();
 
-      showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: const Text("files"),
-            content: Text(filenames),
-            actions: <Widget>[
-              TextButton(
-                child: const Text("OK"),
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-              ),
-            ],
-          );
-        },
-      );
-      // nav.pushReplacement(MaterialPageRoute(builder: (context) {
-      //   return DashboardPage(sftpRemoteDirControler.text, null);
-      // }));
+      nav.pushReplacement(MaterialPageRoute(builder: (context) {
+        return SftpDashboard(sftpRemoteDirControler.text, sftp);
+      }));
     } catch (err, stackTrace) {
-      debugPrint(
-          'bucket:${sftpRemoteDirControler.text}, err:${err.toString()}');
+      debugPrint('dir:${sftpRemoteDirControler.text}, err:${err.toString()}');
       debugPrint('trace:${stackTrace.toString()}');
       showDialog(
         context: context,
@@ -226,7 +204,7 @@ class _SftpLoginPageState extends State<SftpLoginPage> {
           ),
         ),
         validator: (v) {
-          return v!.trim().length > 2 ? null : "Remote Dir is too short";
+          return v!.trim().isNotEmpty ? null : "Remote Dir is too short";
         },
       ),
     );
