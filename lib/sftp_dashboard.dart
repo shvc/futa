@@ -8,12 +8,12 @@ import 'package:file_picker/file_picker.dart';
 import 'main.dart';
 
 class SftpDashboard extends StatefulWidget {
-  final String bucketName;
+  final String remoteDir;
   final SftpClient client;
   late final Stream<List<SftpName>> dataStream;
 
-  SftpDashboard(this.bucketName, this.client, {Key? key}) : super(key: key) {
-    dataStream = client.listdir(bucketName).asStream();
+  SftpDashboard(this.remoteDir, this.client, {Key? key}) : super(key: key) {
+    dataStream = client.listdir(remoteDir).asStream();
   }
 
   @override
@@ -55,10 +55,13 @@ class _SftpDashboardState extends State<SftpDashboard> {
       //final stat = await local.stat();
 
       final file = await widget.client.open(local.path.split('/').last,
-          mode: SftpFileOpenMode.create | SftpFileOpenMode.write);
+          mode: SftpFileOpenMode.create |
+              SftpFileOpenMode.truncate |
+              SftpFileOpenMode.write);
       await file.write(local.openRead().cast());
 
-      debugPrint("upload file:${local.path} key:${local.path.split('/').last}");
+      debugPrint(
+          "upload ${local.path} -> ${widget.remoteDir}/${local.path.split('/').last}");
 
       sms.showSnackBar(
         SnackBar(
@@ -98,7 +101,7 @@ class _SftpDashboardState extends State<SftpDashboard> {
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
-          title: Text(widget.bucketName),
+          title: Text(widget.remoteDir),
         ),
         drawer: Drawer(
           child: SingleChildScrollView(
