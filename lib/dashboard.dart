@@ -8,14 +8,15 @@ import 'package:file_picker/file_picker.dart';
 import 'package:minio/minio.dart';
 
 import 'login_page.dart';
+import 'main.dart';
 
 class DashboardPage extends StatefulWidget {
   final String bucketName;
-  final Minio client;
+  Minio? client;
   late final Stream<mmodel.ListObjectsResult> dataStream;
 
   DashboardPage(this.bucketName, this.client, {Key? key}) : super(key: key) {
-    dataStream = client.listObjects(bucketName);
+    dataStream = client!.listObjects(bucketName);
   }
 
   @override
@@ -31,7 +32,7 @@ class _DashboardState extends State<DashboardPage> {
 
   void logout() {
     Navigator.pushReplacement(
-        context, MaterialPageRoute(builder: (context) => const LoginPage()));
+        context, MaterialPageRoute(builder: (context) => const MyApp()));
   }
 
   void upload() async {
@@ -56,7 +57,7 @@ class _DashboardState extends State<DashboardPage> {
       File local = File(filename);
       final stat = await local.stat();
 
-      final putResult = await widget.client.putObject(widget.bucketName,
+      final putResult = await widget.client!.putObject(widget.bucketName,
           local.path.split('/').last, local.openRead().cast<Uint8List>(),
           size: stat.size);
       debugPrint(

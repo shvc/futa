@@ -5,14 +5,14 @@ import 'package:minio/minio.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dashboard.dart';
 
-class LoginPage extends StatefulWidget {
-  const LoginPage({Key? key}) : super(key: key);
+class S3LoginPage extends StatefulWidget {
+  const S3LoginPage({Key? key}) : super(key: key);
 
   @override
-  State createState() => _LoginPageState();
+  State createState() => _S3LoginPageState();
 }
 
-class _LoginPageState extends State<LoginPage> {
+class _S3LoginPageState extends State<S3LoginPage> {
   bool _isLoginButtonPressed = false;
 
   final endpointControler = TextEditingController();
@@ -21,11 +21,11 @@ class _LoginPageState extends State<LoginPage> {
   final secretKeyControler = TextEditingController();
   final bucketNameControler = TextEditingController();
 
-  final endpointPrefsName = 'endpoint_name';
-  final regionPrefsName = 'region_name';
-  final accessKeyPrefsName = 'access_key_name';
-  final secretKeyPrefsName = 'secret_key_name';
-  final bucketPrefsName = 'bucket_name';
+  final endpointPrefsName = 's3_endpoint_name';
+  final regionPrefsName = 's3_region_name';
+  final accessKeyPrefsName = 's3_access_key_name';
+  final secretKeyPrefsName = 's3_secret_key_name';
+  final bucketPrefsName = 's3_bucket_name';
 
   void loadPrefs() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -151,15 +151,11 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
-    final hero = Padding(
-      padding: const EdgeInsets.only(top: 25, bottom: 15),
+    const hero = Padding(
+      padding: EdgeInsets.only(top: 0, bottom: 0),
       child: Hero(
-        tag: 'hero',
-        child: CircleAvatar(
-          radius: 44.0,
-          backgroundColor: Colors.transparent,
-          child: Image.asset('assets/logo.png'),
-        ),
+        tag: 's3',
+        child: Icon(Icons.share),
       ),
     );
 
@@ -271,25 +267,27 @@ class _LoginPageState extends State<LoginPage> {
 
     final enterField = Padding(
       padding: const EdgeInsets.only(top: 10.0),
-      child: Row(children: <Widget>[
-        Expanded(
-          child: ElevatedButton(
-            onPressed: _isLoginButtonPressed
-                ? null
-                : () {
-                    if (!(_formKey.currentState as FormState).validate()) {
-                      return;
-                    }
-                    login();
-                  },
-            focusNode: FocusNode(),
-            child: const Padding(
-              padding: EdgeInsets.all(15.0),
-              child: Text("Enter"),
+      child: Row(
+        children: <Widget>[
+          Expanded(
+            child: ElevatedButton(
+              onPressed: _isLoginButtonPressed
+                  ? null
+                  : () {
+                      if (!(_formKey.currentState as FormState).validate()) {
+                        return;
+                      }
+                      login();
+                    },
+              focusNode: FocusNode(),
+              child: const Padding(
+                padding: EdgeInsets.all(15.0),
+                child: Text("Enter"),
+              ),
             ),
           ),
-        ),
-      ]),
+        ],
+      ),
     );
 
     return SafeArea(
