@@ -1,2 +1,2 @@
 # futa
-A simple S3/sftp Browser based on flutter
+A simple S3/sftp file Browser based on flutter

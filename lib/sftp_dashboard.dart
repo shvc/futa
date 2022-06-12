@@ -4,6 +4,7 @@ import 'package:dartssh2/dartssh2.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:file_picker/file_picker.dart';
+import 'package:path/path.dart' as pt;
 
 import 'main.dart';
 
@@ -54,7 +55,7 @@ class _SftpDashboardState extends State<SftpDashboard> {
       File local = File(filename);
       //final stat = await local.stat();
 
-      final file = await widget.client.open(local.path.split('/').last,
+      final file = await widget.client.open(pt.basename(local.path),
           mode: SftpFileOpenMode.create |
               SftpFileOpenMode.truncate |
               SftpFileOpenMode.write);

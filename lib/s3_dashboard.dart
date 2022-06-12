@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:minio/models.dart' as mmodel;
 import 'package:file_picker/file_picker.dart';
 import 'package:minio/minio.dart';
+import 'package:path/path.dart' as pt;
 
 import 'main.dart';
 
@@ -57,7 +58,7 @@ class _DashboardState extends State<S3Dashboard> {
       final stat = await local.stat();
 
       final putResult = await widget.client.putObject(widget.bucketName,
-          local.path.split('/').last, local.openRead().cast<Uint8List>(),
+          pt.basename(local.path), local.openRead().cast<Uint8List>(),
           size: stat.size);
       debugPrint(
           "upload file:${local.path} key:${local.path.split('/').last} result:$putResult");
