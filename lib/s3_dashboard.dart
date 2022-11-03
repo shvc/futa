@@ -109,7 +109,7 @@ class _DashboardState extends State<S3Dashboard> {
               child: AboutListTile(
                 icon: const Icon(Icons.info),
                 applicationIcon: const FlutterLogo(),
-                applicationVersion: '1.0.0 @2022-05',
+                applicationVersion: '1.0.0 @2022-11',
                 applicationLegalese: '\u{a9} 2022 The Authors',
                 aboutBoxChildren: <Widget>[
                   const SizedBox(height: 24),
